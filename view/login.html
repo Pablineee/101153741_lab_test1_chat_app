@@ -3,47 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
+    <title>Login</title>
 </head>
 <body>
-    <h2>Registration</h2>
-    <form id="signupForm">
+    <h2>Login</h2>
+    <form id="loginForm">
         <input type="text" id="username" placeholder="Username" required><br>
-        <input type="text" id="firstname" placeholder="First Name" required><br>
-        <input type="text" id="lastname" placeholder="Last Name" required><br>
         <input type="password" id="password" placeholder="Password" required><br><br>
-        <button type="submit">Signup</button>
+        <button type="submit">Login</button>
+        <p><a href="signup.html">Not a member?</a></p>
     </form>
-    <p>Already have an account? <a href="login.html">Login here</a></p>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const data = {
                 username: document.getElementById('username').value,
-                firstname: document.getElementById('firstname').value,
-                lastname: document.getElementById('lastname').value,
-                password: document.getElementById('password').value,
-            };
+                password: document.getElementById('password').value
+            }
 
             try {
-                const res = await fetch('http://localhost:8000/api/auth/signup', {
+                const res = await fetch('http://localhost:8000/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
                 const result = await res.json();
+
                 if (res.ok) {
-                    alert('Signup successful! Please login.');
-                    window.location.href = 'login.html';
+                    alert(`Welcome back, ${data.username}!`);
+                    window.location.href = 'chat.html';
                 } else {
-                    alert('Signup failed.');
+                    alert('Login failed.');
                 }
 
             } catch (err) {
                 console.error(`An error occurred: ${err.message}`);
             }
+
         });
     </script>
 </body>
