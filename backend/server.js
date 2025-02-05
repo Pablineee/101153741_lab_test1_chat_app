@@ -5,7 +5,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const connectDB = require('./config/db');
 const SERVER_PORT = process.env.PORT || 8000;
+
+// Initiate MongoDB connection
+connectDB();
 
 const server = app.listen(SERVER_PORT, () => {
     console.log(`Chat Server running on http://localhost:${SERVER_PORT}`);
