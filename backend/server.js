@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
+require('dotenv').config();
 const SERVER_PORT = process.env.PORT || 8000;
 
 // Initiate MongoDB connection
