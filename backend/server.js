@@ -64,4 +64,8 @@ io.on('connection', (socket) => {
         data.senderId = socket.id;
         io.to(data.group).emit('group_message', data);
     });
+
+    socket.on('typing', (data) => {
+        io.to(data.room).emit('typing', data);
+    });
 });
