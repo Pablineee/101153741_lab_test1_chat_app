@@ -27,6 +27,12 @@ const chatRoutes = require('./routes/chat');
 app.use(cors());
 app.use(bodyParser.json());
 
+// Serve login page from root
+app.use(express.static(path.join(__dirname, '../view')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../view/login.html'));
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);

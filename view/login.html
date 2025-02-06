@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #chatContainer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        #typingIndicator {
+            font-style: italic;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
     <h2>Login</h2>
@@ -32,9 +56,7 @@
                 const result = await res.json();
 
                 if (res.ok) {
-                    // Store authenticated used in localStorage
                     localStorage.setItem('user', JSON.stringify(result.user))
-
                     window.location.href = 'chat.html';
                 } else {
                     alert('Login failed.');
@@ -43,7 +65,6 @@
             } catch (err) {
                 console.error(`An error occurred: ${err.message}`);
             }
-
         });
     </script>
 </body>

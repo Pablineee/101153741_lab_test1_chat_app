@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #chatContainer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        #typingIndicator {
+            font-style: italic;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
     <h2>Registration</h2>
@@ -35,7 +59,7 @@
 
                 const result = await res.json();
                 if (res.ok) {
-                    alert('Signup successful! Please login.');
+                    alert('Registration successful! Please login.');
                     window.location.href = 'login.html';
                 } else {
                     alert('Signup failed.');

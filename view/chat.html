@@ -4,9 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Portal</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #chatContainer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+        }
+        #typingIndicator {
+            font-style: italic;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
-    <h2>Chat Portal</h2>
-    <button ></button>
+    <h2>Chat Room</h2>
+    <p>Welcome, <span id="username"></span>!</p>
+    <button onclick="logout()">Logout</button>
+    
+    <h3>Select a Room</h3>
+    <select id="roomSelect" onchange="loadMessages()">
+        <option value="devops">DevOps</option>
+        <option value="cloud computing">Cloud Computing</option>
+        <option value="covid19">COVID-19</option>
+        <option value="sports">Sports</option>
+        <option value="nodeJS">NodeJS</option>
+    </select>
+    <button onclick="joinRoom()">Join Room</button>
+    <button onclick="leaveRoom()">Leave Room</button>
+    
+    <h3>Messages</h3>
+    <div id="chatContainer"></div>
+    
+    <input type="text" id="messageInput" placeholder="Type a message..." onkeyup="showTyping()" />
+    <button onclick="sendMessage()">Send</button>
+    <p id="typingIndicator"></p>
+
+    <script>
+        const socket = io();
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('username').innerText = user.username;
+        
+        let currentRoom = "";
+        
+        function joinRoom() {
+            const room = document.getElementById('roomSelect').value;
+            if (currentRoom) {
+                leaveRoom();
+            }
+            socket.emit('join_group', room);
+            currentRoom = room;
+            document.getElementById('chatContainer').innerHTML = `<p><em>You joined ${room}</em></p>`;
+            loadMessages();
+        }
+        
+        function leaveRoom() {
+            if (currentRoom) {
+                socket.emit('leave_group', currentRoom);
+                document.getElementById('chatContainer').innerHTML += `<p><em>You left ${currentRoom}</em></p>`;
+                currentRoom = "";
+            }
+        }
+        
+        function sendMessage() {
+            const message = document.getElementById('messageInput').value.trim();
+            if (message !== "" && currentRoom) {
+                const msgData = { group: currentRoom, message, username: user.username };
+                socket.emit('group_message', msgData);
+                document.getElementById('messageInput').value = "";
+                saveMessage(msgData);
+            }
+        }
+        
+        socket.on('group_message', (data) => {
+            document.getElementById('chatContainer').innerHTML += `<p><b>${data.username}:</b> ${data.message}</p>`;
+            document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+        });
+
+        function showTyping() {
+            socket.emit('typing', { room: currentRoom, username: user.username });
+        }
+
+        socket.on('typing', (data) => {
+            document.getElementById('typingIndicator').innerText = `${data.username} is typing...`;
+            setTimeout(() => {
+                document.getElementById('typingIndicator').innerText = "";
+            }, 2000);
+        });
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>
